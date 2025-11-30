@@ -94,9 +94,7 @@ class TestAdminUsers:
 
         assert response.status_code == 403
 
-    async def test_toggle_user_status_disable(
-        self, client: AsyncClient, admin_headers, test_user
-    ):
+    async def test_toggle_user_status_disable(self, client: AsyncClient, admin_headers, test_user):
         """Test disabling a user."""
         user_id = test_user.id
 
@@ -180,4 +178,3 @@ class TestAdminHealth:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
-

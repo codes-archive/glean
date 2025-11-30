@@ -175,7 +175,9 @@ class AdminService:
         total_entries = total_entries_result.scalar_one()
 
         # Total subscriptions
-        total_subs_result = await self.session.execute(select(func.count()).select_from(Subscription))
+        total_subs_result = await self.session.execute(
+            select(func.count()).select_from(Subscription)
+        )
         total_subscriptions = total_subs_result.scalar_one()
 
         # New users today
@@ -200,4 +202,3 @@ class AdminService:
             "new_users_today": new_users_today,
             "new_entries_today": new_entries_today,
         }
-

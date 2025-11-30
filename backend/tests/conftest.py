@@ -141,6 +141,11 @@ async def admin_headers(admin_user) -> dict[str, str]:
     from glean_core.auth.jwt import create_access_token
 
     access_token = create_access_token(
-        data={"sub": admin_user.id, "username": admin_user.username, "role": admin_user.role.value, "type": "admin"}
+        data={
+            "sub": admin_user.id,
+            "username": admin_user.username,
+            "role": admin_user.role.value,
+            "type": "admin",
+        }
     )
     return {"Authorization": f"Bearer {access_token}"}

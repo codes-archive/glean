@@ -55,9 +55,7 @@ class ParsedFeed:
 
         # Try to get icon from feed, fallback to favicon
         self.icon_url = (
-            feed_info.get("icon")
-            or feed_info.get("logo")
-            or _get_favicon_url(self.site_url)
+            feed_info.get("icon") or feed_info.get("logo") or _get_favicon_url(self.site_url)
         )
 
         self.entries = [ParsedEntry(entry) for entry in data.get("entries", [])]

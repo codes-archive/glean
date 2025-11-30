@@ -154,9 +154,7 @@ async def get_current_admin(
     # Decode admin token directly instead of using verify_token
     # (which expects "access" or "refresh" type, not "admin")
     try:
-        payload = jwt.decode(
-            token, jwt_config.secret_key, algorithms=[jwt_config.algorithm]
-        )
+        payload = jwt.decode(token, jwt_config.secret_key, algorithms=[jwt_config.algorithm])
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -62,12 +62,8 @@ async def fetch_feed_task(ctx: dict, feed_id: str) -> dict[str, str | int]:
             )
 
             # Update feed metadata
-            print(
-                f"[fetch_feed_task] DEBUG: parsed_feed.icon_url = {parsed_feed.icon_url!r}"
-            )
-            print(
-                f"[fetch_feed_task] DEBUG: feed.icon_url (before) = {feed.icon_url!r}"
-            )
+            print(f"[fetch_feed_task] DEBUG: parsed_feed.icon_url = {parsed_feed.icon_url!r}")
+            print(f"[fetch_feed_task] DEBUG: feed.icon_url (before) = {feed.icon_url!r}")
             feed.title = parsed_feed.title or feed.title
             feed.description = parsed_feed.description or feed.description
             feed.site_url = parsed_feed.site_url or feed.site_url
@@ -116,8 +112,7 @@ async def fetch_feed_task(ctx: dict, feed_id: str) -> dict[str, str | int]:
 
                 # Track latest entry time
                 if parsed_entry.published_at and (
-                    latest_entry_time is None
-                    or parsed_entry.published_at > latest_entry_time
+                    latest_entry_time is None or parsed_entry.published_at > latest_entry_time
                 ):
                     latest_entry_time = parsed_entry.published_at
 
@@ -156,16 +151,12 @@ async def fetch_feed_task(ctx: dict, feed_id: str) -> dict[str, str | int]:
 
                 # Disable feed after 10 consecutive errors
                 if feed.error_count >= 10:
-                    print(
-                        f"[fetch_feed_task] DISABLED: Feed {feed.url} disabled after 10 errors"
-                    )
+                    print(f"[fetch_feed_task] DISABLED: Feed {feed.url} disabled after 10 errors")
                     feed.status = FeedStatus.ERROR
 
                 # Schedule retry with exponential backoff
                 retry_minutes = min(60, 15 * (2 ** min(feed.error_count - 1, 5)))
-                feed.next_fetch_at = datetime.now(UTC) + timedelta(
-                    minutes=retry_minutes
-                )
+                feed.next_fetch_at = datetime.now(UTC) + timedelta(minutes=retry_minutes)
 
                 print(
                     f"[fetch_feed_task] Scheduling retry in {retry_minutes} minutes (error count: {feed.error_count})"

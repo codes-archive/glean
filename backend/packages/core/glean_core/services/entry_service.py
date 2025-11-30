@@ -77,9 +77,7 @@ class EntryService:
             if is_read:
                 stmt = stmt.where(UserEntry.is_read.is_(True))
             else:
-                stmt = stmt.where(
-                    (UserEntry.is_read.is_(False)) | (UserEntry.is_read.is_(None))
-                )
+                stmt = stmt.where((UserEntry.is_read.is_(False)) | (UserEntry.is_read.is_(None)))
         if is_liked is not None:
             stmt = stmt.where(UserEntry.is_liked == is_liked)
         if read_later is not None:
@@ -91,11 +89,7 @@ class EntryService:
         total = total_result.scalar() or 0
 
         # Apply pagination and ordering
-        stmt = (
-            stmt.order_by(desc(Entry.published_at))
-            .limit(per_page)
-            .offset((page - 1) * per_page)
-        )
+        stmt = stmt.order_by(desc(Entry.published_at)).limit(per_page).offset((page - 1) * per_page)
 
         result = await self.session.execute(stmt)
         rows = result.all()

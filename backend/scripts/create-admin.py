@@ -62,9 +62,7 @@ async def create_admin(username: str, password: str, role: str) -> bool:
             )
             print("✅ Admin user created successfully!")
             print(f"   Username: {admin.username}")
-            print(
-                f"   Role: {admin.role if isinstance(admin.role, str) else admin.role.value}"
-            )
+            print(f"   Role: {admin.role if isinstance(admin.role, str) else admin.role.value}")
             print(f"   ID: {admin.id}")
             return True
         except Exception as e:
@@ -84,9 +82,7 @@ async def create_admin(username: str, password: str, role: str) -> bool:
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Create initial admin user")
-    parser.add_argument(
-        "--username", default="admin", help="Admin username (default: admin)"
-    )
+    parser.add_argument("--username", default="admin", help="Admin username (default: admin)")
     parser.add_argument(
         "--password", default="Admin123!", help="Admin password (default: Admin123!)"
     )
@@ -106,4 +102,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

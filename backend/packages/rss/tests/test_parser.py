@@ -1,6 +1,5 @@
 """Tests for RSS parser."""
 
-
 from glean_rss.parser import _get_favicon_url
 
 
@@ -50,4 +49,3 @@ class TestFaviconURL:
         """Test favicon URL generation with relative URL."""
         result = _get_favicon_url("/blog/feed")
         assert result is None
-

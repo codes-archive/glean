@@ -77,4 +77,3 @@ class DashboardStatsResponse(BaseModel):
     total_subscriptions: int
     new_users_today: int
     new_entries_today: int
-

@@ -82,9 +82,7 @@ async def admin_login(
         updated_at=admin.updated_at,
     )
 
-    return AdminLoginResponse(
-        access_token=token, token_type="bearer", admin=admin_response
-    )
+    return AdminLoginResponse(access_token=token, token_type="bearer", admin=admin_response)
 
 
 @router.get("/me", response_model=AdminUserResponse)
@@ -154,9 +152,7 @@ async def list_users(
     Returns:
         Paginated user list.
     """
-    users, total = await admin_service.list_users(
-        page=page, per_page=per_page, search=search
-    )
+    users, total = await admin_service.list_users(page=page, per_page=per_page, search=search)
 
     return UserListResponse(
         items=[UserListItem.model_validate(user) for user in users],
@@ -192,8 +188,6 @@ async def toggle_user_status(
     user = await admin_service.toggle_user_status(user_id, request.is_active)
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return UserListItem.model_validate(user)
