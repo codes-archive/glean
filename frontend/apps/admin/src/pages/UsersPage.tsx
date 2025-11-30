@@ -129,7 +129,7 @@ export default function UsersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-sm text-muted-foreground">
-                          {user.name || '-'}
+                          {user.username || '-'}
                         </p>
                       </td>
                       <td className="px-6 py-4">

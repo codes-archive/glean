@@ -48,7 +48,7 @@ export default function LoginPage() {
         <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="error">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>

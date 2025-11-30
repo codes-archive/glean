@@ -440,8 +440,8 @@ function ReadingPane({
   }
 
   const handleLike = async () => {
-    // If already liked, remove like (set to null). Otherwise, set to liked (true)
-    const newValue = entry.is_liked === true ? null : true
+    // If already liked, remove like (set to undefined). Otherwise, set to liked (true)
+    const newValue = entry.is_liked === true ? undefined : true
     await updateMutation.mutateAsync({
       entryId: entry.id,
       data: { is_liked: newValue },
@@ -449,8 +449,8 @@ function ReadingPane({
   }
 
   const handleDislike = async () => {
-    // If already disliked, remove dislike (set to null). Otherwise, set to disliked (false)
-    const newValue = entry.is_liked === false ? null : false
+    // If already disliked, remove dislike (set to undefined). Otherwise, set to disliked (false)
+    const newValue = entry.is_liked === false ? undefined : false
     await updateMutation.mutateAsync({
       entryId: entry.id,
       data: { is_liked: newValue },
