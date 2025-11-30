@@ -75,6 +75,7 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: postgresql+asyncpg://glean:testpassword@localhost:5432/glean_test
+          TEST_DATABASE_URL: postgresql+asyncpg://glean:testpassword@localhost:5432/glean_test
           REDIS_URL: redis://localhost:6379/0
         run: uv run pytest --cov --cov-report=xml
 

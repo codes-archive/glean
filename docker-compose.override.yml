@@ -1,0 +1,17 @@
+# Override file for local development builds
+# Usage: docker compose up -d (automatically uses docker-compose.yml + docker-compose.override.yml)
+# Or: docker compose -f docker-compose.full.yml -f docker-compose.override.yml up -d
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: glean-backend:local
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: glean-backend:local
+

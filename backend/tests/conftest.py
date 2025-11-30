@@ -14,9 +14,10 @@ from glean_api.main import app
 from glean_database import Base
 from glean_database.session import get_session
 
-# Test database URL
+# Test database URL - check TEST_DATABASE_URL first, then DATABASE_URL, then fallback to default
 TEST_DATABASE_URL = os.getenv(
-    "TEST_DATABASE_URL", "postgresql+asyncpg://glean:devpassword@localhost:5432/glean_test"
+    "TEST_DATABASE_URL",
+    os.getenv("DATABASE_URL", "postgresql+asyncpg://glean:devpassword@localhost:5432/glean_test"),
 )
 
 

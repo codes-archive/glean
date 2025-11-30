@@ -37,7 +37,9 @@ fi
 
 # Run database migrations
 echo "Running database migrations..."
-uv run alembic -c packages/database/alembic.ini upgrade head
+cd /app/packages/database
+uv run alembic upgrade head
+cd /app
 
 # Create admin user if requested
 if [ "$CREATE_ADMIN" = "true" ] || [ "$CREATE_ADMIN" = "1" ]; then
