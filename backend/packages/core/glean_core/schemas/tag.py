@@ -59,4 +59,3 @@ class TagBatchRequest(BaseModel):
     tag_id: str
     target_type: str = Field(..., pattern="^(bookmark|user_entry)$")
     target_ids: list[str]
-

@@ -138,8 +138,8 @@ export default function SettingsPage() {
                 Auto-cleanup Period
               </Label>
               <p className="mb-4 text-xs text-muted-foreground">
-                Items marked as "Read Later" will be automatically removed after this period.
-                Set to "Never expire" to keep them indefinitely.
+                Items marked as &quot;Read Later&quot; will be automatically removed after this period.
+                Set to &quot;Never expire&quot; to keep them indefinitely.
               </p>
               <div className="flex flex-wrap gap-2">
                 {READ_LATER_OPTIONS.map((option) => (

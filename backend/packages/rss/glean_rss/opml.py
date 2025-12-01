@@ -91,9 +91,7 @@ def parse_opml_with_folders(content: str) -> OPMLParseResult:
     if body is None:
         return OPMLParseResult(feeds=feeds, folders=folders)
 
-    def process_outline(
-        outline: ET.Element, parent_folder: str | None = None
-    ) -> None:
+    def process_outline(outline: ET.Element, parent_folder: str | None = None) -> None:
         """Recursively process outline elements."""
         xml_url = outline.get("xmlUrl")
 

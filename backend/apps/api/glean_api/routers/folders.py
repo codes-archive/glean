@@ -190,4 +190,3 @@ async def reorder_folders(
         folder_service: Folder service instance.
     """
     await folder_service.reorder_folders(current_user.id, data.orders)
-

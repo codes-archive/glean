@@ -157,9 +157,7 @@ async def update_bookmark(
         HTTPException: If bookmark not found.
     """
     try:
-        return await bookmark_service.update_bookmark(
-            bookmark_id, current_user.id, data
-        )
+        return await bookmark_service.update_bookmark(bookmark_id, current_user.id, data)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
@@ -210,9 +208,7 @@ async def add_folder_to_bookmark(
         HTTPException: If bookmark or folder not found.
     """
     try:
-        return await bookmark_service.add_folder(
-            bookmark_id, current_user.id, data.folder_id
-        )
+        return await bookmark_service.add_folder(bookmark_id, current_user.id, data.folder_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
@@ -240,9 +236,7 @@ async def remove_folder_from_bookmark(
         HTTPException: If bookmark not found.
     """
     try:
-        return await bookmark_service.remove_folder(
-            bookmark_id, current_user.id, folder_id
-        )
+        return await bookmark_service.remove_folder(bookmark_id, current_user.id, folder_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
@@ -270,9 +264,7 @@ async def add_tag_to_bookmark(
         HTTPException: If bookmark or tag not found.
     """
     try:
-        return await bookmark_service.add_tag(
-            bookmark_id, current_user.id, data.tag_id
-        )
+        return await bookmark_service.add_tag(bookmark_id, current_user.id, data.tag_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
@@ -303,4 +295,3 @@ async def remove_tag_from_bookmark(
         return await bookmark_service.remove_tag(bookmark_id, current_user.id, tag_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
-

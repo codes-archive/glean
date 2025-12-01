@@ -256,7 +256,7 @@ export default function BookmarksPage() {
               {searchQuery && (
                 <Badge variant="secondary" className="gap-1">
                   <Search className="h-3 w-3" />
-                  "{searchQuery}"
+                  &quot;{searchQuery}&quot;
                   <button
                     onClick={() => clearFilter('search')}
                     className="ml-1 hover:text-foreground"
@@ -647,7 +647,7 @@ function BookmarkCard({
                     ) : (
                       <>
                         <Plus className="h-4 w-4" />
-                        Create "{tagSearch.trim()}"
+                        Create &quot;{tagSearch.trim()}&quot;
                       </>
                     )}
                   </MenuItem>

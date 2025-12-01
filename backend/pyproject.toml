@@ -28,6 +28,7 @@ members = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+exclude = ["**/migrations/**"]
 
 [tool.ruff.lint]
 select = [

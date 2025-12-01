@@ -44,4 +44,3 @@ def strip_html_tags(html: str | None, max_length: int = 300) -> str | None:
         text = text[: max_length - 3].rsplit(" ", 1)[0] + "..."
 
     return text
-

@@ -80,4 +80,3 @@ async def scheduled_cleanup(ctx: dict[str, Any]) -> dict[str, int]:
     """
     print("[scheduled_cleanup] Running scheduled cleanup (hourly)")
     return await cleanup_read_later(ctx)
-

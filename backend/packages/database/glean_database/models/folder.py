@@ -62,9 +62,7 @@ class Folder(Base, TimestampMixin):
     # Relationships
     user = relationship("User", back_populates="folders")
     parent = relationship("Folder", back_populates="children", remote_side=[id])
-    children = relationship(
-        "Folder", back_populates="parent", cascade="all, delete-orphan"
-    )
+    children = relationship("Folder", back_populates="parent", cascade="all, delete-orphan")
     subscriptions = relationship("Subscription", back_populates="folder")
     bookmark_folders = relationship(
         "BookmarkFolder", back_populates="folder", cascade="all, delete-orphan"
@@ -75,4 +73,3 @@ class Folder(Base, TimestampMixin):
         UniqueConstraint("user_id", "parent_id", "name", "type", name="uq_folder_name"),
         CheckConstraint("type IN ('feed', 'bookmark')", name="ck_folder_type"),
     )
-

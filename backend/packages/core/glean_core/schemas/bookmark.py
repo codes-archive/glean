@@ -99,4 +99,3 @@ class BookmarkTagRequest(BaseModel):
     """Schema for adding a tag to a bookmark."""
 
     tag_id: str
-

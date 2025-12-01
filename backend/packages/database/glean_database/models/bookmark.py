@@ -52,9 +52,7 @@ class Bookmark(Base, TimestampMixin):
     excerpt: Mapped[str | None] = mapped_column(Text)
 
     # Snapshot status (for M6)
-    snapshot_status: Mapped[str] = mapped_column(
-        String(20), nullable=False, default="pending"
-    )
+    snapshot_status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
     snapshot_path: Mapped[str | None] = mapped_column(String(500))
 
     # Relationships
@@ -87,4 +85,3 @@ class Bookmark(Base, TimestampMixin):
             postgresql_where="entry_id IS NOT NULL",
         ),
     )
-

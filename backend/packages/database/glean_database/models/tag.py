@@ -42,13 +42,10 @@ class Tag(Base, TimestampMixin):
 
     # Relationships
     user = relationship("User", back_populates="tags")
-    bookmark_tags = relationship(
-        "BookmarkTag", back_populates="tag", cascade="all, delete-orphan"
-    )
+    bookmark_tags = relationship("BookmarkTag", back_populates="tag", cascade="all, delete-orphan")
     user_entry_tags = relationship(
         "UserEntryTag", back_populates="tag", cascade="all, delete-orphan"
     )
 
     # Constraints
     __table_args__ = (UniqueConstraint("user_id", "name", name="uq_user_tag_name"),)
-

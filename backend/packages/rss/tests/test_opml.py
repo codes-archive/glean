@@ -135,7 +135,11 @@ class TestGenerateOPML:
     def test_generate_opml_simple(self) -> None:
         """Test generating simple OPML without folders."""
         feeds = [
-            {"title": "Feed 1", "url": "https://example.com/feed1.xml", "site_url": "https://example.com"},
+            {
+                "title": "Feed 1",
+                "url": "https://example.com/feed1.xml",
+                "site_url": "https://example.com",
+            },
             {"title": "Feed 2", "url": "https://example.com/feed2.xml"},
         ]
         opml = generate_opml(feeds)
@@ -196,4 +200,3 @@ class TestGenerateOPML:
 
         root_feeds = [f for f in result.feeds if f.folder is None]
         assert len(root_feeds) == 1
-

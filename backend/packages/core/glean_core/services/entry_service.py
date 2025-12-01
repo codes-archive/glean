@@ -98,9 +98,7 @@ class EntryService:
         if folder_id:
             # Get all folder IDs (the folder itself and all its descendants)
             folder_ids = await self._get_folder_tree_ids(folder_id, user_id)
-            subscriptions_stmt = subscriptions_stmt.where(
-                Subscription.folder_id.in_(folder_ids)
-            )
+            subscriptions_stmt = subscriptions_stmt.where(Subscription.folder_id.in_(folder_ids))
 
         result = await self.session.execute(subscriptions_stmt)
         feed_ids = [row[0] for row in result.all()]
@@ -178,9 +176,7 @@ class EntryService:
                     is_read=bool(user_entry.is_read) if user_entry else False,
                     is_liked=user_entry.is_liked if user_entry else None,
                     read_later=bool(user_entry.read_later) if user_entry else False,
-                    read_later_until=(
-                        user_entry.read_later_until if user_entry else None
-                    ),
+                    read_later_until=(user_entry.read_later_until if user_entry else None),
                     read_at=user_entry.read_at if user_entry else None,
                     is_bookmarked=bookmark_id is not None,
                     bookmark_id=str(bookmark_id) if bookmark_id else None,
@@ -377,9 +373,7 @@ class EntryService:
         # If folder_id is provided, filter by feeds in that folder
         if folder_id:
             folder_ids = await self._get_folder_tree_ids(folder_id, user_id)
-            subscriptions_stmt = subscriptions_stmt.where(
-                Subscription.folder_id.in_(folder_ids)
-            )
+            subscriptions_stmt = subscriptions_stmt.where(Subscription.folder_id.in_(folder_ids))
 
         result = await self.session.execute(subscriptions_stmt)
         feed_ids = [row[0] for row in result.all()]

@@ -105,9 +105,7 @@ class FolderService:
 
         return FolderResponse.model_validate(folder)
 
-    async def create_folder(
-        self, user_id: str, data: FolderCreate
-    ) -> FolderResponse:
+    async def create_folder(self, user_id: str, data: FolderCreate) -> FolderResponse:
         """
         Create a new folder.
 
@@ -246,9 +244,7 @@ class FolderService:
 
         return FolderResponse.model_validate(folder)
 
-    async def reorder_folders(
-        self, user_id: str, orders: list[FolderOrder]
-    ) -> None:
+    async def reorder_folders(self, user_id: str, orders: list[FolderOrder]) -> None:
         """
         Batch update folder positions.
 
@@ -334,4 +330,3 @@ class FolderService:
         result = await self.session.execute(stmt)
         max_position = result.scalar_one_or_none()
         return (max_position or 0) + 1
-

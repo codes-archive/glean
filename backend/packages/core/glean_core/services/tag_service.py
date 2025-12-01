@@ -42,11 +42,7 @@ class TagService:
         Returns:
             Tag list response with counts.
         """
-        stmt = (
-            select(Tag)
-            .where(Tag.user_id == user_id)
-            .order_by(Tag.name)
-        )
+        stmt = select(Tag).where(Tag.user_id == user_id).order_by(Tag.name)
         result = await self.session.execute(stmt)
         tags = result.scalars().all()
 
@@ -55,18 +51,14 @@ class TagService:
         for tag in tags:
             # Count bookmarks with this tag
             bookmark_count_stmt = (
-                select(func.count())
-                .select_from(BookmarkTag)
-                .where(BookmarkTag.tag_id == tag.id)
+                select(func.count()).select_from(BookmarkTag).where(BookmarkTag.tag_id == tag.id)
             )
             bookmark_result = await self.session.execute(bookmark_count_stmt)
             bookmark_count = bookmark_result.scalar_one()
 
             # Count entries with this tag
             entry_count_stmt = (
-                select(func.count())
-                .select_from(UserEntryTag)
-                .where(UserEntryTag.tag_id == tag.id)
+                select(func.count()).select_from(UserEntryTag).where(UserEntryTag.tag_id == tag.id)
             )
             entry_result = await self.session.execute(entry_count_stmt)
             entry_count = entry_result.scalar_one()
@@ -123,9 +115,7 @@ class TagService:
             ValueError: If tag name already exists for user.
         """
         # Check for duplicate name
-        existing_stmt = select(Tag).where(
-            Tag.user_id == user_id, Tag.name == data.name
-        )
+        existing_stmt = select(Tag).where(Tag.user_id == user_id, Tag.name == data.name)
         result = await self.session.execute(existing_stmt)
         if result.scalar_one_or_none():
             raise ValueError("Tag with this name already exists")
@@ -141,9 +131,7 @@ class TagService:
 
         return TagResponse.model_validate(tag)
 
-    async def update_tag(
-        self, tag_id: str, user_id: str, data: TagUpdate
-    ) -> TagResponse:
+    async def update_tag(self, tag_id: str, user_id: str, data: TagUpdate) -> TagResponse:
         """
         Update a tag.
 
@@ -231,9 +219,7 @@ class TagService:
                     )
                 )
                 if not existing.scalar_one_or_none():
-                    self.session.add(
-                        BookmarkTag(bookmark_id=target_id, tag_id=tag_id)
-                    )
+                    self.session.add(BookmarkTag(bookmark_id=target_id, tag_id=tag_id))
                     added += 1
         elif target_type == "user_entry":
             for target_id in target_ids:
@@ -245,9 +231,7 @@ class TagService:
                     )
                 )
                 if not existing.scalar_one_or_none():
-                    self.session.add(
-                        UserEntryTag(user_entry_id=target_id, tag_id=tag_id)
-                    )
+                    self.session.add(UserEntryTag(user_entry_id=target_id, tag_id=tag_id))
                     added += 1
         else:
             raise ValueError(f"Invalid target type: {target_type}")
@@ -305,4 +289,3 @@ class TagService:
         if not tag:
             raise ValueError("Tag not found")
         return tag
-

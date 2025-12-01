@@ -83,4 +83,3 @@ class UserEntryTag(Base):
     # Relationships
     user_entry = relationship("UserEntry", back_populates="user_entry_tags")
     tag = relationship("Tag", back_populates="user_entry_tags")
-

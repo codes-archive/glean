@@ -264,21 +264,25 @@ class AdminService:
         feed_data = []
         for feed in feeds:
             sub_count_result = await self.session.execute(
-                select(func.count()).select_from(Subscription).where(Subscription.feed_id == feed.id)
+                select(func.count())
+                .select_from(Subscription)
+                .where(Subscription.feed_id == feed.id)
             )
             subscriber_count = sub_count_result.scalar_one()
 
-            feed_data.append({
-                "id": feed.id,
-                "url": feed.url,
-                "title": feed.title,
-                "status": feed.status,
-                "subscriber_count": subscriber_count,
-                "last_fetched_at": feed.last_fetched_at,
-                "error_count": feed.error_count,
-                "fetch_error_message": feed.fetch_error_message,
-                "created_at": feed.created_at,
-            })
+            feed_data.append(
+                {
+                    "id": feed.id,
+                    "url": feed.url,
+                    "title": feed.title,
+                    "status": feed.status,
+                    "subscriber_count": subscriber_count,
+                    "last_fetched_at": feed.last_fetched_at,
+                    "error_count": feed.error_count,
+                    "fetch_error_message": feed.fetch_error_message,
+                    "created_at": feed.created_at,
+                }
+            )
 
         return feed_data, total
 
@@ -318,7 +322,13 @@ class AdminService:
             "created_at": feed.created_at,
         }
 
-    async def update_feed(self, feed_id: str, url: str | None = None, title: str | None = None, status: str | None = None) -> dict[str, Any] | None:
+    async def update_feed(
+        self,
+        feed_id: str,
+        url: str | None = None,
+        title: str | None = None,
+        status: str | None = None,
+    ) -> dict[str, Any] | None:
         """
         Update a feed.
 

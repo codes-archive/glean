@@ -302,9 +302,7 @@ class TestBookmarkAPI:
         )
 
         # Get bookmarks filtered by folder
-        response = await client.get(
-            f"/api/bookmarks?folder_id={folder_id}", headers=auth_headers
-        )
+        response = await client.get(f"/api/bookmarks?folder_id={folder_id}", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
         assert data["total"] >= 1
@@ -343,15 +341,11 @@ class TestBookmarkAPI:
         bookmark_id = create_response.json()["id"]
 
         # Delete bookmark
-        response = await client.delete(
-            f"/api/bookmarks/{bookmark_id}", headers=auth_headers
-        )
+        response = await client.delete(f"/api/bookmarks/{bookmark_id}", headers=auth_headers)
         assert response.status_code == 204
 
         # Verify deleted
-        get_response = await client.get(
-            f"/api/bookmarks/{bookmark_id}", headers=auth_headers
-        )
+        get_response = await client.get(f"/api/bookmarks/{bookmark_id}", headers=auth_headers)
         assert get_response.status_code == 404
 
     @pytest.mark.asyncio
@@ -566,4 +560,3 @@ class TestTagBatchOperations:
         )
         assert response.status_code == 200
         assert response.json()["affected"] == 2
-

@@ -206,9 +206,7 @@ async def batch_delete_subscriptions(
     deleted_count, failed_count = await feed_service.batch_delete_subscriptions(
         data.subscription_ids, current_user.id
     )
-    return BatchDeleteSubscriptionsResponse(
-        deleted_count=deleted_count, failed_count=failed_count
-    )
+    return BatchDeleteSubscriptionsResponse(deleted_count=deleted_count, failed_count=failed_count)
 
 
 @router.post("/{subscription_id}/refresh", status_code=status.HTTP_202_ACCEPTED)
@@ -314,9 +312,7 @@ async def import_opml(
                 folder_count += 1
             except ValueError:
                 # Folder might already exist, try to find it
-                existing_folders = await folder_service.get_folders_tree(
-                    current_user.id, "feed"
-                )
+                existing_folders = await folder_service.get_folders_tree(current_user.id, "feed")
                 for existing_folder in existing_folders.folders:
                     if existing_folder.name == folder_name:
                         folder_id_map[folder_name] = existing_folder.id

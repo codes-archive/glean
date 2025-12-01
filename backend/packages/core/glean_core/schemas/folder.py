@@ -76,4 +76,3 @@ class FolderTreeResponse(BaseModel):
     """Response schema for the folder tree."""
 
     folders: list[FolderTreeNode]
-

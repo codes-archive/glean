@@ -174,9 +174,7 @@ async def fetch_bookmark_metadata_task(
                 # Only process HTML content
                 content_type = response.headers.get("content-type", "")
                 if "text/html" not in content_type.lower():
-                    print(
-                        f"[fetch_bookmark_metadata] Non-HTML content type: {content_type}"
-                    )
+                    print(f"[fetch_bookmark_metadata] Non-HTML content type: {content_type}")
                     return {
                         "status": "skipped",
                         "message": f"Non-HTML content: {content_type}",
@@ -195,7 +193,9 @@ async def fetch_bookmark_metadata_task(
                 description = unescape_html(description)
 
             print(f"[fetch_bookmark_metadata] Extracted title: {title}")
-            print(f"[fetch_bookmark_metadata] Extracted description: {description[:100] if description else None}...")
+            print(
+                f"[fetch_bookmark_metadata] Extracted description: {description[:100] if description else None}..."
+            )
 
             # Update bookmark if we got better data
             updated = False
@@ -216,9 +216,7 @@ async def fetch_bookmark_metadata_task(
                 await session.commit()
                 print(f"[fetch_bookmark_metadata] SUCCESS: Updated bookmark {bookmark_id}")
             else:
-                print(
-                    f"[fetch_bookmark_metadata] No updates needed for bookmark {bookmark_id}"
-                )
+                print(f"[fetch_bookmark_metadata] No updates needed for bookmark {bookmark_id}")
 
             return {
                 "status": "success",
@@ -229,8 +227,7 @@ async def fetch_bookmark_metadata_task(
 
         except httpx.HTTPStatusError as e:
             print(
-                f"[fetch_bookmark_metadata] HTTP error for {bookmark_id}: "
-                f"{e.response.status_code}"
+                f"[fetch_bookmark_metadata] HTTP error for {bookmark_id}: {e.response.status_code}"
             )
             return {
                 "status": "error",
@@ -247,4 +244,3 @@ async def fetch_bookmark_metadata_task(
             return {"status": "error", "message": str(e)}
 
     return {"status": "error", "message": "No database session"}
-
