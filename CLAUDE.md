@@ -86,20 +86,22 @@ The backend uses a **workspace-based monorepo** managed by `uv`:
 **Apps** (deployable applications):
 - `apps/api/` - FastAPI REST API server
   - Entry: `glean_api.main:app`
-  - Routers: auth, feeds, entries, admin
+  - Routers: auth, feeds, entries, bookmarks, folders, tags, admin
   - Runs on port 8000
 
 - `apps/worker/` - arq background task worker
   - Entry: `glean_worker.main.WorkerSettings`
-  - Tasks: feed fetching, scheduled jobs (every 15 min)
+  - Tasks: feed fetching, bookmark metadata extraction, cleanup jobs
+  - Cron jobs: every 15 min for feed fetching
   - Uses Redis for task queue
 
 **Packages** (shared libraries):
 - `packages/database/` - SQLAlchemy 2.0 models & Alembic migrations
-  - Models: User, Feed, Entry, Subscription, UserEntry, Admin
+  - Models: User, Feed, Entry, Subscription, UserEntry, Admin, Bookmark, Folder, Tag, Junction
   - Session management with async PostgreSQL
 
 - `packages/core/` - Business logic and domain services
+  - Services: auth, user, feed, entry, bookmark, folder, tag, admin
   - Depends on `glean-database`
 
 - `packages/rss/` - RSS/Atom feed parsing utilities
@@ -124,8 +126,9 @@ The frontend uses **pnpm workspaces + Turborepo**:
   - Create admin account: `cd backend && uv run python ../scripts/create-admin.py`
 
 **Packages**:
-- `packages/ui/` - Shared React components
+- `packages/ui/` - Shared React components (COSS UI based)
 - `packages/api-client/` - TypeScript API client SDK
+  - Services: auth, feeds, entries, bookmarks, folders, tags
 - `packages/types/` - Shared TypeScript types
 
 Turbo tasks are configured in `frontend/turbo.json` for build, dev, lint, test, and typecheck.
@@ -182,19 +185,35 @@ glean/                              # Project root
 │   │   │   ├── glean_api/        # API source code
 │   │   │   │   ├── middleware/   # Custom middleware
 │   │   │   │   └── routers/      # API route handlers
-│   │   │   │       ├── auth.py   # Authentication endpoints
-│   │   │   │       ├── feeds.py   # RSS feed endpoints
-│   │   │   │       ├── entries.py # Article/entry endpoints
-│   │   │   │       └── admin.py   # Admin endpoints
+│   │   │   │       ├── auth.py       # Authentication endpoints
+│   │   │   │       ├── feeds.py      # RSS feed endpoints
+│   │   │   │       ├── entries.py    # Article/entry endpoints
+│   │   │   │       ├── bookmarks.py  # Bookmark endpoints
+│   │   │   │       ├── folders.py    # Folder management endpoints
+│   │   │   │       ├── tags.py       # Tag management endpoints
+│   │   │   │       └── admin.py      # Admin endpoints
 │   │   │   └── tests/            # API tests
 │   │   └── worker/               # Background task worker
 │   │       ├── glean_worker/     # Worker source code
 │   │       │   └── tasks/        # Background task functions
+│   │       │       ├── feed_fetcher.py      # RSS feed fetching
+│   │       │       ├── bookmark_metadata.py # Bookmark metadata extraction
+│   │       │       └── cleanup.py           # Cleanup jobs
 │   │       └── tests/            # Worker tests
 │   ├── packages/                 # Shared backend libraries
 │   │   ├── database/             # SQLAlchemy models & migrations
 │   │   │   ├── glean_database/
 │   │   │   │   ├── models/       # SQLAlchemy model definitions
+│   │   │   │   │   ├── user.py        # User model
+│   │   │   │   │   ├── feed.py        # Feed model
+│   │   │   │   │   ├── entry.py       # Entry model
+│   │   │   │   │   ├── subscription.py # Subscription model
+│   │   │   │   │   ├── user_entry.py  # UserEntry model
+│   │   │   │   │   ├── bookmark.py    # Bookmark model
+│   │   │   │   │   ├── folder.py      # Folder model
+│   │   │   │   │   ├── tag.py         # Tag model
+│   │   │   │   │   ├── junction.py    # Many-to-many relationships
+│   │   │   │   │   └── admin.py       # Admin model
 │   │   │   │   ├── migrations/   # Alembic migration scripts
 │   │   │   │   │   └── versions/  # Generated migration files
 │   │   │   │   └── session.py    # Database session management
@@ -204,6 +223,14 @@ glean/                              # Project root
 │   │   │   │   ├── auth/         # Authentication utilities
 │   │   │   │   ├── schemas/      # Pydantic data models
 │   │   │   │   └── services/     # Business logic services
+│   │   │   │       ├── auth_service.py     # Authentication
+│   │   │   │       ├── user_service.py     # User management
+│   │   │   │       ├── feed_service.py     # Feed management
+│   │   │   │       ├── entry_service.py    # Entry management
+│   │   │   │       ├── bookmark_service.py # Bookmark management
+│   │   │   │       ├── folder_service.py   # Folder management
+│   │   │   │       ├── tag_service.py      # Tag management
+│   │   │   │       └── admin_service.py    # Admin operations
 │   │   │   └── pyproject.toml    # Core package configuration
 │   │   └── rss/                  # RSS/Atom parsing utilities
 │   │       ├── glean_rss/        # RSS parsing source code
@@ -239,7 +266,7 @@ glean/                              # Project root
 │   │           ├── stores/        # Admin state management
 │   │           └── lib/           # Admin utilities
 │   ├── packages/                 # Shared frontend libraries
-│   │   ├── ui/                   # Shared React components
+│   │   ├── ui/                   # Shared React components (COSS UI)
 │   │   │   ├── src/
 │   │   │   │   ├── components/   # Reusable UI components
 │   │   │   │   └── utils/        # UI utility functions
@@ -247,9 +274,12 @@ glean/                              # Project root
 │   │   ├── api-client/           # TypeScript API client SDK
 │   │   │   ├── src/
 │   │   │   │   └── services/     # API service functions
-│   │   │   │       ├── auth.ts   # Authentication API calls
-│   │   │   │       ├── feeds.ts  # Feed management API calls
-│   │   │   │       └── entries.ts # Entry management API calls
+│   │   │   │       ├── auth.ts       # Authentication API calls
+│   │   │   │       ├── feeds.ts      # Feed management API calls
+│   │   │   │       ├── entries.ts    # Entry management API calls
+│   │   │   │       ├── bookmarks.ts  # Bookmark API calls
+│   │   │   │       ├── folders.ts    # Folder API calls
+│   │   │   │       └── tags.ts       # Tag API calls
 │   │   │   └── package.json     # API client configuration
 │   │   └── types/                # Shared TypeScript types
 │   │       ├── src/
@@ -290,7 +320,7 @@ glean/                              # Project root
 ### Adding API Endpoints
 1. Create/modify router in `backend/apps/api/glean_api/routers/`
 2. Register in `backend/apps/api/glean_api/main.py`
-3. Endpoint pattern: `/api/{resource}` (e.g., `/api/feeds`, `/api/entries`)
+3. Endpoint pattern: `/api/{resource}` (e.g., `/api/feeds`, `/api/entries`, `/api/bookmarks`)
 
 ### Adding Background Tasks
 1. Create task function in `backend/apps/worker/glean_worker/tasks/`

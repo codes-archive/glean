@@ -6,14 +6,28 @@ A self-hosted RSS reader and personal knowledge management tool.
 
 > **Glean** (拾灵) helps information-heavy consumers efficiently manage their reading through intelligent RSS aggregation.
 
+![Glean](asset/Screenshot.png)
+
 ## Features
 
-- 📰 **RSS Subscription** - Subscribe and organize RSS/Atom feeds
+### Core Features
+- 📰 **RSS Subscription** - Subscribe and organize RSS/Atom feeds with OPML import/export
 - 📚 **Smart Reading** - Clean reading experience with content filtering
-- 🔖 **Read Later** - Save articles for later reading
+- 🔖 **Read Later** - Save articles for later reading with auto-cleanup
+- 📁 **Folders & Tags** - Multi-level folders and tags for organization
+- ⭐ **Bookmarks** - Save articles from feeds or external URLs
 - 🔧 **Background Sync** - Automatic feed updates every 15 minutes
 - 🔒 **Self-hosted** - Full data ownership with Docker deployment
-- 🎨 **Modern UI** - Beautiful, responsive interface
+- 🎨 **Modern UI** - Beautiful, responsive warm dark theme interface
+- 👨‍💼 **Admin Dashboard** - User management and system monitoring
+
+### Planned Features (WIP)
+- 🧠 **Smart Recommendations** - AI-powered preference learning and article scoring
+- ⚙️ **Rule Engine** - Automated processing with Jinja2-style conditions
+- 🤖 **AI Features** - Summary generation, auto-tagging, keyword extraction (BYOK)
+- 📄 **Full Content Fetch** - Fetch complete article content for RSS summaries
+- 🔌 **Chrome Extension** - One-click bookmarking from browser
+- 📱 **Mobile PWA** - Progressive Web App for mobile devices
 
 ## Quick Start
 
@@ -129,12 +143,23 @@ make dev-all
 # - API Docs: http://localhost:8000/api/docs
 ```
 
+## Roadmap
+
+| Phase                     | Status    | Features                                                       |
+| ------------------------- | --------- | -------------------------------------------------------------- |
+| **Phase 1: MVP**          | ✅ Done    | User system, RSS subscription, reader, admin dashboard         |
+| **Phase 2: Organization** | ✅ Done    | Bookmarks, folders, tags, read later                           |
+| **Phase 3: Preferences**  | 🚧 WIP     | Embedding pipeline, preference learning, smart recommendations |
+| **Phase 4: Rules**        | 📋 Planned | Rule engine, Jinja2 conditions, automated actions              |
+| **Phase 5: AI**           | 📋 Planned | AI summaries, auto-tagging, keyword extraction, BYOK support   |
+| **Phase 6: Extensions**   | 📋 Planned | Chrome extension, PWA, web snapshots                           |
+
+See **[Product Requirements](./docs/glean-prd-v1.2.md)** for detailed feature specifications.
+
 ## Documentation
 
 - **[Development Guide](./DEVELOPMENT.md)** - Set up your development environment
 - **[Deployment Guide](./deploy/README.md)** - Production deployment details
-- **[Architecture](./docs/glean-architecture.md)** - System architecture overview
-- **[Product Requirements](./docs/glean-prd-v1.2.md)** - Feature specifications
 
 ## Contributing
 
