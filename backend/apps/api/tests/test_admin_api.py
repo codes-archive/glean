@@ -164,7 +164,7 @@ class TestAdminStats:
         """Test that stats endpoint requires authentication."""
         response = await client.get("/api/admin/stats")
 
-        assert response.status_code == 403
+        assert response.status_code == 401
 
 
 @pytest.mark.asyncio

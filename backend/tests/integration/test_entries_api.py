@@ -61,7 +61,9 @@ class TestListEntries:
         data = response.json()
 
         assert "items" in data
-        assert "pagination" in data
+        assert "page" in data
+        assert "per_page" in data
+        assert "total" in data
         assert len(data["items"]) == 0
 
     @pytest.mark.asyncio
@@ -85,9 +87,9 @@ class TestListEntries:
         data = response.json()
 
         assert len(data["items"]) == 2
-        assert data["pagination"]["page"] == 1
-        assert data["pagination"]["per_page"] == 2
-        assert data["pagination"]["total"] == 3
+        assert data["page"] == 1
+        assert data["per_page"] == 2
+        assert data["total"] == 3
 
     @pytest.mark.asyncio
     async def test_list_entries_filter_by_feed(
@@ -247,7 +249,7 @@ class TestMarkAllRead:
     @pytest.mark.asyncio
     async def test_mark_all_read_success(self, client: AsyncClient, auth_headers, test_entries):
         """Test marking all entries as read."""
-        response = await client.post("/api/entries/mark-all-read", headers=auth_headers)
+        response = await client.post("/api/entries/mark-all-read", headers=auth_headers, json={})
 
         assert response.status_code == 200
         data = response.json()
@@ -264,7 +266,7 @@ class TestMarkAllRead:
     ):
         """Test marking all entries in a specific feed as read."""
         response = await client.post(
-            f"/api/entries/mark-all-read?feed_id={test_feed.id}", headers=auth_headers
+            "/api/entries/mark-all-read", headers=auth_headers, json={"feed_id": str(test_feed.id)}
         )
 
         assert response.status_code == 200

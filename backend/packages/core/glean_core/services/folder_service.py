@@ -48,9 +48,7 @@ class FolderService:
         """
         # Build query
         stmt = (
-            select(Folder)
-            .where(Folder.user_id == user_id)
-            .order_by(Folder.position, Folder.name)
+            select(Folder).where(Folder.user_id == user_id).order_by(Folder.position, Folder.name)
         )
         if folder_type:
             stmt = stmt.where(Folder.type == folder_type)
@@ -192,9 +190,7 @@ class FolderService:
         await self.session.delete(folder)
         await self.session.commit()
 
-    async def move_folder(
-        self, folder_id: str, user_id: str, data: FolderMove
-    ) -> FolderResponse:
+    async def move_folder(self, folder_id: str, user_id: str, data: FolderMove) -> FolderResponse:
         """
         Move a folder to a new parent.
 
@@ -232,9 +228,7 @@ class FolderService:
                 raise ValueError("Folder type must match parent folder type")
 
         # Update position to end of new parent
-        new_position = await self._get_next_position(
-            user_id, data.parent_id, folder.type
-        )
+        new_position = await self._get_next_position(user_id, data.parent_id, folder.type)
 
         folder.parent_id = data.parent_id
         folder.position = new_position

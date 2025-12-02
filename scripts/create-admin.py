@@ -26,8 +26,10 @@ from glean_database.session import get_session, init_database
 async def create_admin(username: str, password: str, role: str) -> None:
     """Create an admin user."""
     # Get database URL from environment
-    database_url = os.getenv("DATABASE_URL", "postgresql+asyncpg://glean:devpassword@localhost:5432/glean")
-    
+    database_url = os.getenv(
+        "DATABASE_URL", "postgresql+asyncpg://glean:devpassword@localhost:5432/glean"
+    )
+
     # Initialize database
     init_database(database_url)
 
@@ -47,16 +49,18 @@ async def create_admin(username: str, password: str, role: str) -> None:
             admin = await service.create_admin_user(
                 username=username, password=password, role=admin_role
             )
-            print(f"✅ Admin user created successfully!")
+            print("✅ Admin user created successfully!")
             print(f"   Username: {admin.username}")
-            print(f"   Role: {admin.role if isinstance(admin.role, str) else admin.role.value}")
+            print(
+                f"   Role: {admin.role if isinstance(admin.role, str) else admin.role.value}"
+            )
             print(f"   ID: {admin.id}")
         except Exception as e:
             await session.rollback()
             error_msg = str(e)
             if "duplicate key" in error_msg or "already exists" in error_msg:
                 print(f"⚠️  Admin user '{username}' already exists.")
-                print(f"   Use a different username or delete the existing user first.")
+                print("   Use a different username or delete the existing user first.")
                 return
             else:
                 print(f"❌ Error creating admin user: {e}")
@@ -66,7 +70,9 @@ async def create_admin(username: str, password: str, role: str) -> None:
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Create initial admin user")
-    parser.add_argument("--username", default="admin", help="Admin username (default: admin)")
+    parser.add_argument(
+        "--username", default="admin", help="Admin username (default: admin)"
+    )
     parser.add_argument(
         "--password", default="Admin123!", help="Admin password (default: Admin123!)"
     )
@@ -85,4 +91,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -45,7 +45,9 @@ class JWTConfig:
         self.refresh_token_expire_days = refresh_token_expire_days
 
 
-def create_access_token(user_id: str, config: JWTConfig) -> str:
+def create_access_token(
+    user_id: str, config: JWTConfig, type_: Literal["access", "admin"] = "access"
+) -> str:
     """
     Create an access token.
 
@@ -61,7 +63,7 @@ def create_access_token(user_id: str, config: JWTConfig) -> str:
 
     payload = {
         "sub": user_id,
-        "type": "access",
+        "type": type_,
         "exp": int(expire.timestamp()),
         "iat": int(now.timestamp()),
     }
