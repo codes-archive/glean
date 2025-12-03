@@ -1,6 +1,8 @@
 {
   "name": "@glean/web",
   "version": "0.1.0",
+  "description": "Glean - Personal Knowledge Management and RSS Reader",
+  "author": "Leslie Leung",
   "private": true,
   "type": "module",
   "main": "dist-electron/main.js",
@@ -45,6 +47,7 @@
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "electron": "^39.2.4",
+    "electron-builder": "^24.13.3",
     "postcss": "^8.4.0",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.3.0",

@@ -59,6 +59,23 @@ export function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const { data: subscriptions } = useSubscriptions()
+
+  // Detect if running on macOS Electron
+  const [isMacElectron, setIsMacElectron] = useState(false)
+
+  useEffect(() => {
+    const checkPlatform = async () => {
+      if (window.electronAPI?.isElectron) {
+        try {
+          const platformInfo = await window.electronAPI.getPlatform()
+          setIsMacElectron(platformInfo.platform === 'darwin')
+        } catch (error) {
+          console.error('Failed to get platform info:', error)
+        }
+      }
+    }
+    checkPlatform()
+  }, [])
   
   // Sidebar resize state
   const [sidebarWidth, setSidebarWidth] = useState(() => {
@@ -339,7 +356,9 @@ export function Layout() {
         }}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between border-b border-border p-3 md:p-4">
+        <div className={`flex items-center justify-between border-b border-border p-3 md:p-4 ${
+          isMacElectron ? 'md:pt-12' : ''
+        }`}>
           <Link to="/" className="flex items-center gap-2.5 overflow-hidden md:gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary/20 md:h-9 md:w-9">
               <Rss className="h-4 w-4 text-primary-foreground md:h-5 md:w-5" />

@@ -19,8 +19,21 @@ export default defineConfig(({ mode }) => {
                 entry: 'electron/main.ts',
               },
               preload: {
-                // Preload scripts
-                input: 'electron/preload.ts',
+                // Preload scripts - use array for multiple entries
+                input: [
+                  'electron/preload.ts',
+                  'electron/config-preload.ts',
+                ],
+                vite: {
+                  build: {
+                    rollupOptions: {
+                      output: {
+                        // Disable inline dynamic imports for multiple entries
+                        inlineDynamicImports: false,
+                      },
+                    },
+                  },
+                },
               },
               // Optional: Use Node.js API in Renderer-process
               renderer: {},
