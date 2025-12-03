@@ -62,6 +62,15 @@ dist/
 build/
 *.log
 
+# Electron
+dist-electron/
+release/
+*.dmg
+*.exe
+*.AppImage
+*.deb
+*.rpm
+
 # Environment
 .env
 .env.local

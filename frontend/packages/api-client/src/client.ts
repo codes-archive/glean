@@ -21,14 +21,35 @@ export class ApiClient {
   }> = []
 
   constructor(config: { baseURL?: string; timeout?: number } = {}) {
+    // In Electron, use the configured API URL, otherwise use relative path
+    let baseURL = config.baseURL || '/api'
+
+    // Check if running in Electron and get configured API URL
+    if (typeof window !== 'undefined' && (window as any).electronAPI) {
+      // Electron environment - API URL will be set dynamically
+      baseURL = ''
+    }
+
     this.client = axios.create({
-      baseURL: config.baseURL || '/api',
+      baseURL,
       timeout: config.timeout || 30000,
       headers: { 'Content-Type': 'application/json' },
     })
 
-    // Request interceptor: Attach auth token
-    this.client.interceptors.request.use((config) => {
+    // Request interceptor: Attach auth token and handle Electron API URL
+    this.client.interceptors.request.use(async (config) => {
+      // In Electron, prepend the configured API URL
+      if (typeof window !== 'undefined' && (window as any).electronAPI) {
+        try {
+          const apiUrl = await (window as any).electronAPI.getApiUrl()
+          if (apiUrl && config.url && !config.url.startsWith('http')) {
+            config.url = `${apiUrl}${config.url.startsWith('/') ? '' : '/'}${config.url}`
+          }
+        } catch (error) {
+          console.error('Failed to get API URL from Electron:', error)
+        }
+      }
+
       const token = localStorage.getItem('access_token')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`

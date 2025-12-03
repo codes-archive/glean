@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuthStore } from '../stores/authStore'
-import { User, Mail, Shield, CheckCircle, AlertCircle, Clock, Loader2, Eye } from 'lucide-react'
+import { User, Mail, Shield, CheckCircle, AlertCircle, Clock, Loader2, Eye, Server } from 'lucide-react'
 import { Label, Button } from '@glean/ui'
 
 // Read later expiration options
@@ -21,9 +21,33 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  // Electron-specific state
+  const [isElectron, setIsElectron] = useState(false)
+  const [apiUrl, setApiUrl] = useState('http://localhost:8000')
+  const [apiUrlInput, setApiUrlInput] = useState('')
+  const [isTestingConnection, setIsTestingConnection] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'success' | 'error' | null>(null)
+
   // Get current read_later_days from user settings, default to 7
   const currentReadLaterDays = user?.settings?.read_later_days ?? 7
   const showReadLaterRemaining = user?.settings?.show_read_later_remaining ?? true
+
+  // Check if running in Electron and load API URL
+  useEffect(() => {
+    const checkElectron = async () => {
+      if (typeof window !== 'undefined' && (window as any).electronAPI) {
+        setIsElectron(true)
+        try {
+          const url = await (window as any).electronAPI.getApiUrl()
+          setApiUrl(url)
+          setApiUrlInput(url)
+        } catch (error) {
+          console.error('Failed to load API URL:', error)
+        }
+      }
+    }
+    checkElectron()
+  }, [])
 
   const handleReadLaterDaysChange = async (days: number) => {
     setIsSaving(true)
@@ -48,6 +72,46 @@ export default function SettingsPage() {
       setTimeout(() => setSaveSuccess(false), 2000)
     } catch {
       // Error is handled by the store
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleTestConnection = async () => {
+    setIsTestingConnection(true)
+    setConnectionStatus(null)
+    try {
+      const response = await fetch(`${apiUrlInput}/api/health`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(5000)
+      })
+      if (response.ok) {
+        setConnectionStatus('success')
+        setTimeout(() => setConnectionStatus(null), 3000)
+      } else {
+        setConnectionStatus('error')
+      }
+    } catch (error) {
+      console.error('Connection test failed:', error)
+      setConnectionStatus('error')
+    } finally {
+      setIsTestingConnection(false)
+    }
+  }
+
+  const handleSaveApiUrl = async () => {
+    if (!isElectron) return
+
+    setIsSaving(true)
+    try {
+      await (window as any).electronAPI.setApiUrl(apiUrlInput)
+      setApiUrl(apiUrlInput)
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 2000)
+      // Reload to use new API URL
+      setTimeout(() => window.location.reload(), 1000)
+    } catch (error) {
+      console.error('Failed to save API URL:', error)
     } finally {
       setIsSaving(false)
     }
@@ -123,8 +187,98 @@ export default function SettingsPage() {
           </div>
         </section>
 
+        {/* Backend Server Configuration (Electron only) */}
+        {isElectron && (
+          <section className="animate-fade-in mb-6 rounded-xl border border-border bg-card p-6" style={{ animationDelay: '50ms' }}>
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                <Server className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="font-display text-xl font-semibold text-foreground">Backend Server</h2>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label className="mb-2 block text-sm text-muted-foreground">
+                  API Server URL
+                </Label>
+                <p className="mb-4 text-xs text-muted-foreground">
+                  Configure the backend server URL for the desktop application.
+                  Changes require an application reload.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={apiUrlInput}
+                    onChange={(e) => setApiUrlInput(e.target.value)}
+                    placeholder="http://localhost:8000"
+                    className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    disabled={isSaving || isTestingConnection}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestConnection}
+                    disabled={isSaving || isTestingConnection || !apiUrlInput}
+                    className="min-w-[100px]"
+                  >
+                    {isTestingConnection ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Testing
+                      </>
+                    ) : (
+                      'Test'
+                    )}
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSaveApiUrl}
+                    disabled={isSaving || isTestingConnection || apiUrl === apiUrlInput}
+                    className="min-w-[100px]"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving
+                      </>
+                    ) : (
+                      'Save'
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Connection Status */}
+              {connectionStatus && (
+                <div className={`flex items-center gap-2 text-sm ${
+                  connectionStatus === 'success' ? 'text-green-500' : 'text-destructive'
+                }`}>
+                  {connectionStatus === 'success' ? (
+                    <>
+                      <CheckCircle className="h-4 w-4" />
+                      Connection successful
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="h-4 w-4" />
+                      Connection failed - please check the URL
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Current API URL */}
+              <div className="rounded-lg bg-muted/50 p-3">
+                <p className="text-xs text-muted-foreground mb-1">Current API URL:</p>
+                <p className="text-sm font-mono text-foreground">{apiUrl}</p>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Read Later Settings */}
-        <section className="animate-fade-in mb-6 rounded-xl border border-border bg-card p-6" style={{ animationDelay: '50ms' }}>
+        <section className="animate-fade-in mb-6 rounded-xl border border-border bg-card p-6" style={{ animationDelay: isElectron ? '100ms' : '50ms' }}>
           <div className="mb-6 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
               <Clock className="h-5 w-5 text-primary" />
