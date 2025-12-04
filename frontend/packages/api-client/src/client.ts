@@ -46,6 +46,12 @@ export class ApiClient {
       if (this.isElectron) {
         const apiUrl = await this.getApiUrl()
         if (apiUrl) {
+          // Additional validation: ensure apiUrl is safe to use
+          if (!this.isValidUrl(apiUrl)) {
+            console.error('Refusing to use invalid API URL in request:', apiUrl)
+            return Promise.reject(new Error('Invalid API URL configuration'))
+          }
+
           // apiUrl is like "http://localhost:8000"
           // baseURL is like "/api"
           // Result should be "http://localhost:8000/api"
@@ -139,9 +145,30 @@ export class ApiClient {
     if (!this.isElectron || !window.electronAPI) return
 
     try {
-      this.cachedApiUrl = await window.electronAPI.getApiUrl()
+      const url = await window.electronAPI.getApiUrl()
+      // Validate URL before caching
+      if (this.isValidUrl(url)) {
+        this.cachedApiUrl = url
+      } else {
+        console.error('Invalid API URL loaded from configuration:', url)
+        // Fall back to default
+        this.cachedApiUrl = 'http://localhost:8000'
+      }
     } catch (error) {
       console.error('Failed to initialize API URL cache:', error)
+    }
+  }
+
+  /**
+   * Validate URL format and protocol
+   * Only allows HTTP and HTTPS protocols
+   */
+  private isValidUrl(url: string): boolean {
+    try {
+      const parsedUrl = new URL(url)
+      return ['http:', 'https:'].includes(parsedUrl.protocol)
+    } catch {
+      return false
     }
   }
 
@@ -159,8 +186,15 @@ export class ApiClient {
     }
 
     try {
-      this.cachedApiUrl = await window.electronAPI.getApiUrl()
-      return this.cachedApiUrl
+      const url = await window.electronAPI.getApiUrl()
+      // Validate URL before caching
+      if (this.isValidUrl(url)) {
+        this.cachedApiUrl = url
+        return this.cachedApiUrl
+      } else {
+        console.error('Invalid API URL retrieved from Electron:', url)
+        return ''
+      }
     } catch (error) {
       console.error('Failed to get API URL from Electron:', error)
       return ''
