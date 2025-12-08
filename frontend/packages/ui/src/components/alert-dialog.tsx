@@ -2,11 +2,11 @@
 
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui-components/react/alert-dialog";
 
-import { cn } from "../utils/cn";
+import { cn } from "../utils";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
-const AlertDialogPortal: typeof AlertDialogPrimitive.Portal = AlertDialogPrimitive.Portal;
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
 
 function AlertDialogTrigger(props: AlertDialogPrimitive.Trigger.Props) {
   return (
@@ -56,7 +56,7 @@ function AlertDialogPopup({
       <AlertDialogViewport>
         <AlertDialogPrimitive.Popup
           className={cn(
-            "relative row-start-2 grid max-h-full w-full min-w-0 overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-xl transition-[scale,opacity,translate] duration-200 ease-in-out will-change-transform data-nested-dialog-open:origin-top data-ending-style:opacity-0 data-starting-style:opacity-0 max-sm:rounded-t-2xl max-sm:rounded-b-none max-sm:data-ending-style:translate-y-4 max-sm:data-starting-style:translate-y-4 sm:max-w-lg sm:-translate-y-[calc(1.25rem*var(--nested-dialogs))] sm:scale-[calc(1-0.1*var(--nested-dialogs))] sm:opacity-[calc(1-0.1*var(--nested-dialogs))] sm:data-nested:data-ending-style:translate-y-8 sm:data-nested:data-starting-style:translate-y-8 sm:data-ending-style:scale-98 sm:data-starting-style:scale-98",
+            "sm:-translate-y-[calc(1.25rem*var(--nested-dialogs))] relative row-start-2 grid max-h-full w-full min-w-0 border-t bg-popover bg-clip-padding text-popover-foreground opacity-[calc(1-0.1*var(--nested-dialogs))] shadow-lg transition-[scale,opacity,translate] duration-200 ease-in-out will-change-transform before:pointer-events-none before:absolute before:inset-0 before:shadow-[0_1px_--theme(--color-black/4%)] data-nested-dialog-open:origin-top data-ending-style:opacity-0 data-starting-style:opacity-0 max-sm:opacity-[calc(1-min(var(--nested-dialogs),1))] max-sm:data-ending-style:translate-y-4 max-sm:data-starting-style:translate-y-4 max-sm:before:hidden sm:max-w-lg sm:data-nested:data-ending-style:translate-y-8 sm:data-nested:data-starting-style:translate-y-8 sm:scale-[calc(1-0.1*var(--nested-dialogs))] sm:rounded-2xl sm:border sm:data-ending-style:scale-98 sm:data-starting-style:scale-98 sm:before:rounded-[calc(var(--radius-2xl)-1px)] dark:bg-clip-border dark:before:shadow-[0_-1px_--theme(--color-white/8%)]",
             className,
           )}
           data-slot="alert-dialog-popup"
@@ -94,7 +94,7 @@ function AlertDialogFooter({
     <div
       className={cn(
         "flex flex-col-reverse gap-2 px-6 sm:flex-row sm:justify-end sm:rounded-b-xl",
-        variant === "default" && "py-4",
+        variant === "default" && "border-t bg-muted/50 py-4",
         variant === "bare" && "pt-4 pb-6",
         className,
       )}
@@ -151,4 +151,3 @@ export {
   AlertDialogClose,
   AlertDialogViewport,
 };
-
