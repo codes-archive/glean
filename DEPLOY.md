@@ -1,6 +1,6 @@
 # Glean Deployment Guide
 
-This directory contains deployment configurations for Glean.
+This guide provides instructions for deploying Glean in different environments.
 
 ## Development Environment
 
@@ -29,8 +29,7 @@ make web    # Terminal 3
 1. **Copy environment configuration**
 
 ```bash
-cd deploy
-cp .env.prod.example .env.prod
+cp deploy/.env.prod.example .env.prod
 ```
 
 2. **Edit `.env.prod` and set secure values**
@@ -196,7 +195,7 @@ server {
 
 **Backend workers:**
 
-Adjust uvicorn workers in `docker-compose.prod.yml`:
+Adjust uvicorn workers in `deploy/docker-compose.prod.yml`:
 ```yaml
 command: ["uv", "run", "uvicorn", "glean_api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
 ```
