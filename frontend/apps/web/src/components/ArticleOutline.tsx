@@ -367,7 +367,7 @@ export function ArticleOutline({
   )
 
   // Desktop visibility control
-  const { isVisible: desktopVisible, setIsVisible: setDesktopVisible } = useOutlineVisibility(
+  const { isVisible: desktopVisible } = useOutlineVisibility(
     scrollContainerRef,
     isMobile,
     isHovered

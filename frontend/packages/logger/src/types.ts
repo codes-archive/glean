@@ -7,11 +7,11 @@ export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error'
  * Logger interface with methods for each log level
  */
 export interface Logger {
-  trace: (...args: any[]) => void
-  debug: (...args: any[]) => void
-  info: (...args: any[]) => void
-  warn: (...args: any[]) => void
-  error: (...args: any[]) => void
+  trace: (...args: unknown[]) => void
+  debug: (...args: unknown[]) => void
+  info: (...args: unknown[]) => void
+  warn: (...args: unknown[]) => void
+  error: (...args: unknown[]) => void
 }
 
 /**

@@ -17,7 +17,7 @@ const getDefaultLogLevel = (): LogLevel => {
     if (storedLevel && ['trace', 'debug', 'info', 'warn', 'error'].includes(storedLevel)) {
       return storedLevel
     }
-  } catch (error) {
+  } catch {
     // Ignore localStorage errors (e.g., in private browsing)
   }
 
@@ -34,7 +34,7 @@ const setLogLevel = (level: LogLevel, persistent = false): void => {
   if (persistent) {
     try {
       localStorage.setItem('glean_log_level', level)
-    } catch (error) {
+    } catch {
       // Ignore localStorage errors
     }
   }

@@ -7,7 +7,7 @@ import {
   useExportOPML,
 } from '../../hooks/useSubscriptions'
 import { useFolderStore } from '../../stores/folderStore'
-import type { Subscription } from '@glean/types'
+import type { Subscription, SubscriptionListResponse } from '@glean/types'
 import { useTranslation } from '@glean/i18n'
 import {
   Button,
@@ -69,7 +69,7 @@ export function SubscriptionsTab() {
     search: searchQuery,
     page,
     per_page: perPage,
-  })
+  }) as { data: SubscriptionListResponse | undefined; isLoading: boolean; error: Error | null }
 
   // File input for OPML import
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -124,7 +124,7 @@ export function SubscriptionsTab() {
   }
 
   // Pagination calculations
-  const totalItems = (data as any)?.total || 0
+  const totalItems = data?.total || 0
   const totalPages = Math.ceil(totalItems / perPage)
   const hasNextPage = page < totalPages
   const hasPrevPage = page > 1
@@ -183,7 +183,7 @@ export function SubscriptionsTab() {
           <span className="text-sm font-medium text-muted-foreground">
             {data
               ? t('manageFeeds.subscriptionCount', {
-                  count: (data as any).total || 0,
+                  count: data.total || 0,
                 })
               : t('manageFeeds.loading')}
           </span>
@@ -204,8 +204,8 @@ export function SubscriptionsTab() {
               <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">{t('manageFeeds.failedToLoad')}</p>
             </div>
-          ) : data && (data as any).items && (data as any).items.length > 0 ? (
-            (data as any).items.map((subscription: Subscription) => (
+          ) : data && data.items && data.items.length > 0 ? (
+            data.items.map((subscription: Subscription) => (
               <div
                 key={subscription.id}
                 className="w-full p-4 hover:bg-muted/30 transition-colors"

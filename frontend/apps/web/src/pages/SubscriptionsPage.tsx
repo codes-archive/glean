@@ -608,6 +608,7 @@ function SubscriptionRow({
   folders,
   style,
 }: SubscriptionRowProps) {
+  const { t } = useTranslation('feeds')
   const updateMutation = useUpdateSubscription()
 
   const title = subscription.custom_title || subscription.feed.title || subscription.feed.url
