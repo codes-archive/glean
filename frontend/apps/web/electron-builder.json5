@@ -84,6 +84,7 @@
     "target": ["AppImage", "deb", "rpm"],
     "icon": "build/icon.png",
     "category": "Utility",
-    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "maintainer": "Leslie Leung <leslieleung@proton.me>"
   }
 }

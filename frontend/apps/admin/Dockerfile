@@ -6,7 +6,7 @@ FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Install pnpm
-RUN npm install -g pnpm@8.15.0
+RUN npm install -g pnpm@10.26.0
 
 # Copy workspace configuration
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./

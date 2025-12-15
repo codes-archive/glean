@@ -2,7 +2,11 @@
   "name": "@glean/web",
   "version": "0.2.0",
   "description": "Glean - Personal Knowledge Management and RSS Reader",
-  "author": "Leslie Leung",
+  "author": {
+    "name": "Leslie Leung",
+    "email": "leslieleung@proton.me"
+  },
+  "homepage": "https://github.com/LeslieLeung/glean",
   "private": true,
   "type": "module",
   "main": "dist-electron/main.js",
