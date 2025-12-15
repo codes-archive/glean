@@ -16,6 +16,7 @@ export type Namespace =
   | 'bookmarks'
   | 'feeds'
   | 'ui'
+  | 'admin'
 
 /**
  * Translation resources type structure
@@ -28,6 +29,7 @@ export interface TranslationResources {
   bookmarks: typeof import('./locales/en/bookmarks.json')
   feeds: typeof import('./locales/en/feeds.json')
   ui: typeof import('./locales/en/ui.json')
+  admin: typeof import('./locales/en/admin.json')
 }
 
 /**

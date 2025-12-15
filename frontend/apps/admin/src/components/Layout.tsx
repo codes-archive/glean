@@ -1,7 +1,8 @@
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '../stores/authStore'
-import { LogOut, LayoutDashboard, Users, Rss, FileText, SlidersHorizontal } from 'lucide-react'
+import { useLanguageStore } from '../stores/languageStore'
+import { LogOut, LayoutDashboard, Users, Rss, FileText, SlidersHorizontal, Settings, Languages } from 'lucide-react'
 import {
   Button,
   Badge,
@@ -11,7 +12,14 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogClose
+  AlertDialogClose,
+  Label,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  buttonVariants,
 } from '@glean/ui'
 import { useState } from 'react'
 import { useTranslation } from '@glean/i18n'
@@ -24,6 +32,7 @@ import { useTranslation } from '@glean/i18n'
 export function Layout() {
   const { t } = useTranslation(['admin', 'common'])
   const { admin, logout } = useAuthStore()
+  const { language, setLanguage } = useLanguageStore()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const location = useLocation()
@@ -64,6 +73,11 @@ export function Layout() {
       path: '/embeddings',
       label: t('admin:layout.nav.embeddings'),
       icon: SlidersHorizontal,
+    },
+    {
+      path: '/system',
+      label: t('admin:layout.nav.system'),
+      icon: Settings,
     },
   ]
 
@@ -120,6 +134,28 @@ export function Layout() {
             <p className="text-xs font-medium text-foreground">{admin?.username}</p>
             <p className="mt-1 text-xs text-muted-foreground capitalize">{admin?.role}</p>
           </div>
+
+          {/* Language Selector */}
+          <div className="mb-3">
+            <Label className="mb-2 block text-xs font-medium text-muted-foreground">
+              {t('admin:layout.language.label')}
+            </Label>
+            <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'zh-CN')}>
+              <SelectTrigger className="w-full">
+                <div className="flex items-center gap-2">
+                  <Languages className="h-4 w-4 text-muted-foreground" />
+                  <SelectValue>
+                    {language === 'en' ? '🇺🇸 English' : '🇨🇳 简体中文'}
+                  </SelectValue>
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">🇺🇸 English</SelectItem>
+                <SelectItem value="zh-CN">🇨🇳 简体中文</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button
             onClick={() => setShowLogoutConfirm(true)}
             variant="outline"
@@ -147,11 +183,11 @@ export function Layout() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogClose render={<Button variant="ghost" />}>
+            <AlertDialogClose className={buttonVariants({ variant: 'ghost' })}>
               {t('common:actions.cancel')}
             </AlertDialogClose>
             <AlertDialogClose
-              render={<Button variant="destructive" />}
+              className={buttonVariants({ variant: 'destructive' })}
               onClick={handleLogout}
             >
               {t('admin:layout.logout.button')}

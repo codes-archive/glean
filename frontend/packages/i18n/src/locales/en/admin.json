@@ -7,7 +7,11 @@
       "feeds": "Feeds",
       "entries": "Entries",
       "settings": "Settings",
-      "embeddings": "Embeddings"
+      "embeddings": "Embeddings",
+      "system": "System"
+    },
+    "language": {
+      "label": "Language"
     },
     "logout": {
       "button": "Sign out",

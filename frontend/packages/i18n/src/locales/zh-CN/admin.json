@@ -7,7 +7,11 @@
       "feeds": "订阅",
       "entries": "文章",
       "settings": "设置",
-      "embeddings": "向量"
+      "embeddings": "向量",
+      "system": "系统"
+    },
+    "language": {
+      "label": "语言"
     },
     "logout": {
       "button": "退出登录",

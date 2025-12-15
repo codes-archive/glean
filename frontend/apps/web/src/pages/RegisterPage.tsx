@@ -50,7 +50,19 @@ export default function RegisterPage() {
     }
   }
 
-  const displayError = validationError || error
+  // Translate specific backend error messages
+  const translateError = (errorMsg: string | null): string | null => {
+    if (!errorMsg) return null
+    
+    // Handle specific backend error messages
+    if (errorMsg.includes('Registration is currently disabled by the administrator')) {
+      return t('errors.registrationDisabled')
+    }
+    
+    return errorMsg
+  }
+
+  const displayError = validationError || translateError(error)
 
   const features = [
     t('register.features.subscribe'),
