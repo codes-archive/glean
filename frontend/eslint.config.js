@@ -16,9 +16,39 @@ export default [
   // Base configuration for all files
   js.configs.recommended,
   
+  // TypeScript files (non-React packages)
+  {
+    files: ['packages/api-client/**/*.ts', 'packages/types/**/*.ts'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.es2020,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      // TypeScript recommended rules
+      ...tseslint.configs.recommended.rules,
+      
+      // Custom rules
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
+    },
+  },
+  
   // TypeScript and React files
   {
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['packages/api-client/**', 'packages/types/**'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
